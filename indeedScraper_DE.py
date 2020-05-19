@@ -134,7 +134,6 @@ def jobScrape(data):
 
 #Location Scraper
 def locationScrape(data):
-    data = data
     soup = BeautifulSoup(data.text, 'html.parser')
     location = soup.find_all('span', attrs={'class':"location accessible-contrast-color-location"})
     location_list = []
