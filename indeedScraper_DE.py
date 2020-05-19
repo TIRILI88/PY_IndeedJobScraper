@@ -14,14 +14,14 @@ ll = [] ##LocationList
 
 ##appends the scraped data to a spreadsheet
 #Job/Company/Location
-def appendToCompanyJobs_Workbook():
+def appendToCompanyJobs_Workbook(listToAppend_JL, listToAppend_CL, listToAppend_LL):
     path = r"C:\Users\...\Softwareentwickler\CompanyJobs.xlsx" #Please create a spreadsheet called "CompanyJobs.xlsx" and insert the location here!
     book = load_workbook(path)
     sheet_name = str(date.today())
     writer = pd.ExcelWriter(path, engine = 'openpyxl')
     writer.book = book
 
-    CompanyJob = pd.DataFrame({'Unternehmen' : cl, 'Job' : jl, 'Location' : ll})
+    CompanyJob = pd.DataFrame({'Unternehmen' : listToAppend_CL, 'Job' : listToAppend_JL, 'Location' : listToAppend_LL})
     CompanyJob.to_excel(writer, sheet_name=sheet_name, index=True)
     writer.save()
     writer.close()
@@ -171,11 +171,17 @@ def jobsOut_Func():
             ll.extend(locationScrape(data))
     counter +=10
 
-    #Appends the Scrapes to the workbook
-    if len(cl) == len(jl):
-        appendToCompanyJobs_Workbook()
+    diffNumberTotaJobs = len(cl) - numberTotalJobs
+    listToAppend_JL = jl[:-diffNumberTotaJobs]
+    listToAppend_CL = cl[:-diffNumberTotaJobs]
+    listToAppend_LL = ll[:-diffNumberTotaJobs]
 
-    print("ComapnyList: " + str(len(cl)))
-    print('Joblist: ' + str(len(jl)))
+    #Appends the Scrapes to the workbook
+    if len(listToAppend_CL) == len(listToAppend_JL):
+        appendToCompanyJobs_Workbook(listToAppend_JL, listToAppend_CL, listToAppend_LL)
+
+    print("ComapnyList: " + str(len(listToAppend_CL)))
+    print('Joblist: ' + str(len(listToAppend_JL)))
+
 
 jobsOut_Func()
